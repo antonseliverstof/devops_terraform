@@ -9,6 +9,8 @@ variable "az" {}
 variable "instance_type" {}
 variable "public_key_location" {}
 variable "subnet_zone" {}
+variable "public_key" {}
+
 
 resource "aws_vpc" "myapp-vpc" {
     cidr_block = var.vpc_cidr_block
@@ -105,7 +107,7 @@ data "aws_ami" "latest-ubuntu-image" {
 
 resource "aws_key_pair" "ssh-key" {
     key_name = "server_key"
-    public_key = "${file(var.public_key_location)}"
+    public_key = var.public_key
 }
 
 resource "aws_instance" "myapp-k8s-master" {
