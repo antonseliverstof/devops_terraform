@@ -76,3 +76,16 @@ resource "aws_security_group" "myapp-sg" {
       "Name" = "${var.env_prefix}-sg"
     }
 }
+
+data "aws_ami" "latest-ubuntu-image" {
+    most_recent = true
+    owners = ["679593333241"]
+    filter {
+        name = "name"
+        values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+    }
+}
+
+# resource "aws_instance" "myapp-server" {
+#     ami = data.aws_ami.latest-ubuntu-image.id
+# }
