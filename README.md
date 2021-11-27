@@ -1,1 +1,1 @@
-### Terraform Config for Devops Project
+### Terraform Configs for Devops Project
