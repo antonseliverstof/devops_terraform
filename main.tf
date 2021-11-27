@@ -2,6 +2,11 @@ provider "aws" {
   region = "us-east-2"
 }
 
+variable "vpc_cidr_block" {}
+variable "subnet_cidr_block" {}
+variable "env_prefix" {}
+variable "az" {}
+
 resource "aws_vpc" "myapp-vpc" {
   cidr_block = var.vpc_cidr_block
   tags = {
