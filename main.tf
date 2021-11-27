@@ -66,6 +66,13 @@ resource "aws_security_group" "myapp-sg" {
         cidr_blocks = ["0.0.0.0/0"]
     }
 
+    ingress {
+        from_port = 0
+        to_port = 0
+        protocol = "-1"
+        cidr_blocks = [var.vpc_cidr_block]
+    }
+
     egress {
         from_port = 0
         to_port = 0
@@ -93,7 +100,8 @@ resource "aws_key_pair" "ssh-key" {
     public_key = "${file(var.public_key_location)}"
 }
 
-resource "aws_instance" "myapp-server" {
+resource "aws_instance" "myapp-k8s-master" {
+    count = 2
     ami = data.aws_ami.latest-ubuntu-image.id
     instance_type = var.instance_type
 
@@ -107,6 +115,24 @@ resource "aws_instance" "myapp-server" {
     user_data = file("entry-script.sh")
 
     tags = {
-        Name = "${var.env_prefix}-k8s-server"
+        Name = "${var.env_prefix}-k8s-master-${count.index}"
+    }
+}
+
+resource "aws_instance" "myapp-k8s-worker" {
+    ami = data.aws_ami.latest-ubuntu-image.id
+    instance_type = var.instance_type
+
+    subnet_id = aws_subnet.myapp-subnet-1.id
+    vpc_security_group_ids = [aws_security_group.myapp-sg.id]
+    availability_zone = var.az
+    
+    associate_public_ip_address = true
+    key_name = aws_key_pair.ssh-key.key_name
+
+    user_data = file("entry-script.sh")
+
+    tags = {
+        Name = "${var.env_prefix}-k8s-worker"
     }
 }
