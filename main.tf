@@ -83,6 +83,27 @@ resource "aws_security_group" "myapp-sg" {
         cidr_blocks = [var.vpc_cidr_block]
     }
 
+    ingress {
+        from_port = 9090
+        to_port = 9090
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+
+    ingress {
+        from_port = 3000
+        to_port = 3000
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+
+    ingress {
+        from_port = 30000
+        to_port = 32767
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+
     egress {
         from_port = 0
         to_port = 0
